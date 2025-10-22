@@ -1,0 +1,778 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Twthik ADH - منصة التوثيق الذكي للممتلكات</title>
+    <link rel="icon" type="image/x-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛡️</text></svg>">
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --primary-light: #3b82f6;
+            --secondary: #059669;
+            --accent: #f59e0b;
+            --warning: #dc2626;
+            --light: #f8fafc;
+            --dark: #1e293b;
+            --gray: #64748b;
+            --border: #e2e8f0;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Tahoma', 'Geneva', 'Verdana', sans-serif;
+        }
+
+        body {
+            background-color: #f1f5f9;
+            line-height: 1.6;
+        }
+
+        body[dir="rtl"] {
+            direction: rtl;
+            text-align: right;
+        }
+
+        body[dir="ltr"] {
+            direction: ltr;
+            text-align: left;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* الشريط العلوي */
+        .navbar {
+            background: white;
+            box-shadow: var(--shadow);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logo-badge {
+            background: var(--primary);
+            color: white;
+            padding: 0.25rem 0.5rem;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            margin-right: 0.5rem;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--dark);
+            font-weight: 500;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            right: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary);
+            transition: width 0.3s;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .language-switcher {
+            display: flex;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            overflow: hidden;
+            background: white;
+        }
+
+        .lang-btn {
+            padding: 0.5rem 1rem;
+            background: none;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+        }
+
+        .lang-btn.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.95rem;
+        }
+
+        .btn-outline {
+            border: 2px solid var(--primary);
+            color: var(--primary);
+            background: transparent;
+        }
+
+        .btn-outline:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+            box-shadow: 0 2px 4px rgba(37, 99, 235, 0.2);
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(37, 99, 235, 0.3);
+        }
+
+        /* قسم الهيرو */
+        .hero {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: 140px 0 100px;
+            margin-top: 60px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000" opacity="0.1"><polygon fill="white" points="0,1000 1000,0 1000,1000"/></svg>');
+            background-size: cover;
+        }
+
+        .hero-content {
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1.5rem;
+            font-weight: 700;
+            line-height: 1.2;
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            margin-bottom: 2.5rem;
+            opacity: 0.95;
+            font-weight: 300;
+        }
+
+        .hero-badges {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .badge {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            backdrop-filter: blur(10px);
+        }
+
+        /* الميزات */
+        .features {
+            padding: 100px 0;
+            background: white;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-title h2 {
+            font-size: 2.8rem;
+            color: var(--dark);
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+
+        .section-title p {
+            font-size: 1.2rem;
+            color: var(--gray);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2.5rem;
+        }
+
+        .feature-card {
+            background: var(--light);
+            padding: 2.5rem;
+            border-radius: 16px;
+            text-align: center;
+            transition: all 0.3s;
+            border: 1px solid var(--border);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .feature-icon {
+            font-size: 3.5rem;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .feature-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--dark);
+        }
+
+        .feature-card p {
+            color: var(--gray);
+            line-height: 1.7;
+        }
+
+        /* كيفية العمل */
+        .how-it-works {
+            padding: 100px 0;
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+        }
+
+        .steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 3rem;
+            margin-top: 3rem;
+        }
+
+        .step {
+            text-align: center;
+            padding: 2rem;
+            position: relative;
+        }
+
+        .step-number {
+            background: var(--primary);
+            color: white;
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            font-size: 1.8rem;
+            font-weight: bold;
+            box-shadow: 0 8px 20px rgba(37, 99, 235, 0.3);
+        }
+
+        .step h3 {
+            font-size: 1.4rem;
+            margin-bottom: 1rem;
+            color: var(--dark);
+        }
+
+        .step p {
+            color: var(--gray);
+            line-height: 1.7;
+        }
+
+        /* التسعير */
+        .pricing {
+            padding: 100px 0;
+            background: white;
+        }
+
+        .pricing-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2.5rem;
+            margin-top: 3rem;
+        }
+
+        .pricing-card {
+            background: var(--light);
+            padding: 3rem 2rem;
+            border-radius: 16px;
+            text-align: center;
+            border: 2px solid transparent;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .pricing-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--primary);
+        }
+
+        .pricing-card.featured {
+            border-color: var(--primary);
+            transform: scale(1.05);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .pricing-card.featured::after {
+            content: 'الأكثر شهرة';
+            position: absolute;
+            top: 20px;
+            left: -30px;
+            background: var(--accent);
+            color: white;
+            padding: 0.5rem 3rem;
+            transform: rotate(-45deg);
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .price {
+            font-size: 3rem;
+            font-weight: bold;
+            color: var(--primary);
+            margin: 1.5rem 0;
+        }
+
+        .price span {
+            font-size: 1rem;
+            color: var(--gray);
+        }
+
+        .pricing-features {
+            list-style: none;
+            margin: 2rem 0;
+            text-align: right;
+        }
+
+        .pricing-features li {
+            padding: 0.75rem 0;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .pricing-features li:last-child {
+            border-bottom: none;
+        }
+
+        /* الفوتر */
+        .footer {
+            background: var(--dark);
+            color: white;
+            padding: 60px 0 30px;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 3rem;
+            margin-bottom: 3rem;
+        }
+
+        .footer-section h3 {
+            margin-bottom: 1.5rem;
+            color: white;
+        }
+
+        .footer-section a {
+            color: #cbd5e1;
+            text-decoration: none;
+            display: block;
+            margin-bottom: 0.5rem;
+            transition: color 0.3s;
+        }
+
+        .footer-section a:hover {
+            color: white;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid #334155;
+            color: #94a3b8;
+        }
+
+        /* التجاوب مع الشاشات الصغيرة */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .hero p {
+                font-size: 1.1rem;
+            }
+            
+            .steps, .pricing-cards {
+                grid-template-columns: 1fr;
+            }
+            
+            .pricing-card.featured {
+                transform: none;
+            }
+            
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .section-title h2 {
+                font-size: 2.2rem;
+            }
+        }
+
+        /* إضافات للتفاعل */
+        .btn-loading {
+            position: relative;
+            pointer-events: none;
+        }
+
+        .btn-loading::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border: 2px solid transparent;
+            border-top: 2px solid currentColor;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body dir="rtl">
+    <!-- الشريط العلوي -->
+    <nav class="navbar">
+        <div class="container nav-container">
+            <a href="#" class="logo">
+                <span class="logo-badge">ADH</span>
+                Twthik
+            </a>
+            <div class="nav-links">
+                <a href="#features" data-ar="الميزات" data-en="Features">الميزات</a>
+                <a href="#how-it-works" data-ar="كيفية العمل" data-en="How It Works">كيفية العمل</a>
+                <a href="#pricing" data-ar="الباقات" data-en="Pricing">الباقات</a>
+                <a href="#contact" data-ar="اتصل بنا" data-en="Contact">اتصل بنا</a>
+            </div>
+            <div class="nav-actions">
+                <div class="language-switcher">
+                    <button class="lang-btn active" data-lang="ar">العربية</button>
+                    <button class="lang-btn" data-lang="en">English</button>
+                </div>
+                <a href="#login" class="btn btn-outline" data-ar="تسجيل الدخول" data-en="Login">تسجيل الدخول</a>
+                <a href="#register" class="btn btn-primary" data-ar="ابدأ مجاناً" data-en="Get Started">ابدأ مجاناً</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- قسم الهيرو -->
+    <section class="hero">
+        <div class="container hero-content">
+            <div class="hero-badges">
+                <div class="badge" data-ar="منصة توثيق ذكية" data-en="Smart Documentation Platform">منصة توثيق ذكية</div>
+                <div class="badge" data-ar="آمن ومشفّر" data-en="Secure & Encrypted">آمن ومشفّر</div>
+            </div>
+            <h1 data-ar="Twthik ADH - وثّق مستقبلك بثقة" data-en="Twthik ADH - Secure Your Future with Confidence">Twthik ADH - وثّق مستقبلك بثقة</h1>
+            <p data-ar="منصة التوثيق الذكي الأولى لحماية وتنظيم جميع ممتلكاتك. وثّق، احفظ، واسترجع مستنداتك في أي وقت ومن أي مكان." data-en="The premier smart documentation platform to protect and organize all your assets. Document, save, and retrieve your documents anytime, anywhere.">منصة التوثيق الذكي الأولى لحماية وتنظيم جميع ممتلكاتك. وثّق، احفظ، واسترجع مستنداتك في أي وقت ومن أي مكان.</p>
+            <a href="#register" class="btn btn-primary" data-ar="ابدأ رحلتك الآن" data-en="Start Your Journey Now">ابدأ رحلتك الآن</a>
+        </div>
+    </section>
+
+    <!-- الميزات -->
+    <section id="features" class="features">
+        <div class="container">
+            <div class="section-title">
+                <h2 data-ar="لماذا تختار Twthik ADH؟" data-en="Why Choose Twthik ADH?">لماذا تختار Twthik ADH؟</h2>
+                <p data-ar="منصة شاملة تجمع بين القوة التقنية والبساطة في الاستخدام" data-en="A comprehensive platform that combines technical power with ease of use">منصة شاملة تجمع بين القوة التقنية والبساطة في الاستخدام</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🛡️</div>
+                    <h3 data-ar="حماية متقدمة" data-en="Advanced Protection">حماية متقدمة</h3>
+                    <p data-ar="تشفير من طرف إلى طرف مع نسخ احتياطية تلقائية تضمن أمان بياناتك دائمًا" data-en="End-to-end encryption with automatic backups ensure your data is always secure">تشفير من طرف إلى طرف مع نسخ احتياطية تلقائية تضمن أمان بياناتك دائمًا</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🧠</div>
+                    <h3 data-ar="ذكاء اصطناعي" data-en="AI Powered">ذكاء اصطناعي</h3>
+                    <p data-ar="تقنيات الذكاء الاصطناعي لتصنيف المستندات تلقائيًا واستخراج المعلومات المهمة" data-en="AI technologies for automatic document classification and important information extraction">تقنيات الذكاء الاصطناعي لتصنيف المستندات تلقائيًا واستخراج المعلومات المهمة</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">⚡</div>
+                    <h3 data-ar="تقارير فورية" data-en="Instant Reports">تقارير فورية</h3>
+                    <p data-ar="إنشاء تقارير تأمينية وقانونية محترفة خلال ثوانٍ بتنسيقات متعددة" data-en="Generate professional insurance and legal reports in seconds with multiple formats">إنشاء تقارير تأمينية وقانونية محترفة خلال ثوانٍ بتنسيقات متعددة</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- كيفية العمل -->
+    <section id="how-it-works" class="how-it-works">
+        <div class="container">
+            <div class="section-title">
+                <h2 data-ar="كيف تعمل المنصة؟" data-en="How It Works?">كيف تعمل المنصة؟</h2>
+                <p data-ar="3 خطوات بسيطة تفصلك عن تنظيم وحماية جميع ممتلكاتك" data-en="3 simple steps separate you from organizing and protecting all your assets">3 خطوات بسيطة تفصلك عن تنظيم وحماية جميع ممتلكاتك</p>
+            </div>
+            <div class="steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <h3 data-ar="سجّل وانشئ حسابك" data-en="Sign Up & Create Account">سجّل وانشئ حسابك</h3>
+                    <p data-ar="أنشئ حسابك في أقل من دقيقة مع التحقق الآمن من الهوية" data-en="Create your account in less than a minute with secure identity verification">أنشئ حسابك في أقل من دقيقة مع التحقق الآمن من الهوية</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <h3 data-ar="أضف ووثّق الممتلكات" data-en="Add & Document Properties">أضف ووثّق الممتلكات</h3>
+                    <p data-ar="قم برفع صور ومستندات ممتلكاتك مع الوصف التفصيلي والتقييم" data-en="Upload photos and documents of your properties with detailed description and valuation">قم برفع صور ومستندات ممتلكاتك مع الوصف التفصيلي والتقييم</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <h3 data-ar="استفد من التوثيق الذكي" data-en="Benefit from Smart Documentation">استفد من التوثيق الذكي</h3>
+                    <p data-ar="استخدم منصة Twthik ADH عند الحاجة للتأمين، القروض، أو الإجراءات القانونية" data-en="Use Twthik ADH platform when needed for insurance, loans, or legal procedures">استخدم منصة Twthik ADH عند الحاجة للتأمين، القروض، أو الإجراءات القانونية</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- الباقات -->
+    <section id="pricing" class="pricing">
+        <div class="container">
+            <div class="section-title">
+                <h2 data-ar="باقات Twthik ADH" data-en="Twthik ADH Plans">باقات Twthik ADH</h2>
+                <p data-ar="اختر الباقة التي تناسب احتياجاتك مع إمكانية الترقية في أي وقت" data-en="Choose the plan that fits your needs with the possibility to upgrade anytime">اختر الباقة التي تناسب احتياجاتك مع إمكانية الترقية في أي وقت</p>
+            </div>
+            <div class="pricing-cards">
+                <div class="pricing-card">
+                    <h3 data-ar="الأساسية" data-en="Essential">الأساسية</h3>
+                    <div class="price">0 <span data-ar="ر.س/شهر" data-en">SAR/month</span></div>
+                    <ul class="pricing-features">
+                        <li>✓ <span data-ar="حتى 15 ممتلك" data-en="Up to 15 properties">حتى 15 ممتلك</span></li>
+                        <li>✓ <span data-ar="2GB مساحة تخزين" data-en="2GB storage">2GB مساحة تخزين</span></li>
+                        <li>✓ <span data-ar="تقارير أساسية" data-en="Basic reports">تقارير أساسية</span></li>
+                        <li>✗ <span data-ar="توثيق بلوك تشين" data-en="Blockchain verification">توثيق بلوك تشين</span></li>
+                        <li>✗ <span data-ar="دعم فني متميز" data-en="Premium support">دعم فني متميز</span></li>
+                    </ul>
+                    <a href="#register" class="btn btn-outline" data-ar="ابدأ مجاناً" data-en="Start Free">ابدأ مجاناً</a>
+                </div>
+                <div class="pricing-card featured">
+                    <h3 data-ar="المتميزة" data-en="Premium">المتميزة</h3>
+                    <div class="price">79 <span data-ar="ر.س/شهر" data-en">SAR/month</span></div>
+                    <ul class="pricing-features">
+                        <li>✓ <span data-ar="ممتلكات غير محدودة" data-en="Unlimited properties">ممتلكات غير محدودة</span></li>
+                        <li>✓ <span data-ar="50GB مساحة تخزين" data-en="50GB storage">50GB مساحة تخزين</span></li>
+                        <li>✓ <span data-ar="جميع أنواع التقارير" data-en="All report types">جميع أنواع التقارير</span></li>
+                        <li>✓ <span data-ar="توثيق بلوك تشين" data-en="Blockchain verification">توثيق بلوك تشين</span></li>
+                        <li>✓ <span data-ar="دعم فني متميز" data-en="Premium support">دعم فني متميز</span></li>
+                    </ul>
+                    <a href="#register" class="btn btn-primary" data-ar="اشترك الآن" data-en="Subscribe Now">اشترك الآن</a>
+                </div>
+                <div class="pricing-card">
+                    <h3 data-ar="الشركات" data-en="Business">الشركات</h3>
+                    <div class="price">199 <span data-ar="ر.س/شهر" data-en">SAR/month</span></div>
+                    <ul class="pricing-features">
+                        <li>✓ <span data-ar="مستخدمين متعددين" data-en="Multiple users">مستخدمين متعددين</span></li>
+                        <li>✓ <span data-ar="250GB مساحة تخزين" data-en="250GB storage">250GB مساحة تخزين</span></li>
+                        <li>✓ <span data-ar="تقارير مخصصة" data-en="Custom reports">تقارير مخصصة</span></li>
+                        <li>✓ <span data-ar="API متكامل" data-en="Integrated API">API متكامل</span></li>
+                        <li>✓ <span data-ar="دعم فني 24/7" data-en="24/7 support">دعم فني 24/7</span></li>
+                    </ul>
+                    <a href="#contact" class="btn btn-outline" data-ar="اتصل بنا" data-en="Contact Us">اتصل بنا</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- الفوتر -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Twthik ADH</h3>
+                    <p data-ar="منصة التوثيق الذكي الرائدة لحماية وتنظيم الممتلكات" data-en="The leading smart documentation platform for property protection and organization">منصة التوثيق الذكي الرائدة لحماية وتنظيم الممتلكات</p>
+                </div>
+                <div class="footer-section">
+                    <h3 data-ar="روابط سريعة" data-en="Quick Links">روابط سريعة</h3>
+                    <a href="#features" data-ar="الميزات" data-en="Features">الميزات</a>
+                    <a href="#how-it-works" data-ar="كيفية العمل" data-en="How It Works">كيفية العمل</a>
+                    <a href="#pricing" data-ar="الباقات" data-en="Pricing">الباقات</a>
+                    <a href="#contact" data-ar="اتصل بنا" data-en="Contact">اتصل بنا</a>
+                </div>
+                <div class="footer-section">
+                    <h3 data-ar="الدعم" data-en="Support">الدعم</h3>
+                    <a href="#help" data-ar="المركز المساعد" data-en="Help Center">المركز المساعد</a>
+                    <a href="#privacy" data-ar="سياسة الخصوصية" data-en="Privacy Policy">سياسة الخصوصية</a>
+                    <a href="#terms" data-ar="شروط الخدمة" data-en="Terms of Service">شروط الخدمة</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p data-ar="© 2024 Twthik ADH. جميع الحقوق محفوظة." data-en="© 2024 Twthik ADH. All rights reserved.">© 2024 Twthik ADH. جميع الحقوق محفوظة.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // نظام التبديل بين اللغات
+        document.addEventListener('DOMContentLoaded', function() {
+            const langButtons = document.querySelectorAll('.lang-btn');
+            const elementsToTranslate = document.querySelectorAll('[data-ar]');
+            
+            // تعيين اللغة الافتراضية
+            let currentLang = 'ar';
+            
+            // وظيفة تغيير اللغة
+            function changeLanguage(lang) {
+                currentLang = lang;
+                
+                // تحديث أزرار اللغة
+                langButtons.forEach(btn => {
+                    if (btn.getAttribute('data-lang') === lang) {
+                        btn.classList.add('active');
+                    } else {
+                        btn.classList.remove('active');
+                    }
+                });
+                
+                // تحديث اتجاه الصفحة
+                document.body.setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');
+                
+                // تحديث النصوص
+                elementsToTranslate.forEach(element => {
+                    const translation = element.getAttribute(`data-${lang}`);
+                    if (translation) {
+                        element.textContent = translation;
+                    }
+                });
+                
+                // تحديث السمة lang في html
+                document.documentElement.setAttribute('lang', lang);
+                
+                // حفظ التفضيل في localStorage
+                localStorage.setItem('twthik_language', lang);
+            }
+            
+            // إضافة مستمعي الأحداث لأزرار اللغة
+            langButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const lang = this.getAttribute('data-lang');
+                    changeLanguage(lang);
+                });
+            });
+            
+            // محاولة تحميل اللغة المحفوظة
+            const savedLang = localStorage.getItem('twthik_language');
+            if (savedLang) {
+                changeLanguage(savedLang);
+            }
+            
+            // إضافة تأثير التمرير الناعم
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
