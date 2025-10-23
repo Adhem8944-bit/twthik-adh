@@ -1,0 +1,1022 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ميزانتي برو - نظام إدارة الميزانية المتكامل والآمن</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --secondary: #3498db;
+            --success: #27ae60;
+            --warning: #f39c12;
+            --danger: #e74c3c;
+            --light: #ecf0f1;
+            --dark: #2c3e50;
+            --gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --premium: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --business: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            --security: linear-gradient(135deg, #434343 0%, #000000 100%);
+            --glass: rgba(255, 255, 255, 0.1);
+            --glass-border: rgba(255, 255, 255, 0.2);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: var(--gradient);
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* شريط التنقل */
+        .navbar {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 15px 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.5em;
+            font-weight: bold;
+            color: var(--primary);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 25px;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--primary);
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--secondary);
+        }
+
+        .nav-actions {
+            display: flex;
+            gap: 15px;
+        }
+
+        /* الأزرار */
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: var(--secondary);
+            color: white;
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+
+        .btn-premium {
+            background: var(--premium);
+            color: white;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--secondary);
+            color: var(--secondary);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        /* قسم الهيرو */
+        .hero {
+            padding: 150px 0 80px;
+            text-align: center;
+            color: white;
+        }
+
+        .hero h1 {
+            font-size: 3em;
+            margin-bottom: 20px;
+        }
+
+        .hero p {
+            font-size: 1.2em;
+            max-width: 700px;
+            margin: 0 auto 30px;
+            opacity: 0.9;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 30px;
+        }
+
+        /* قسم الميزات */
+        .section {
+            padding: 80px 0;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 50px;
+            color: white;
+        }
+
+        .section-title h2 {
+            font-size: 2.5em;
+            margin-bottom: 15px;
+        }
+
+        .section-title p {
+            font-size: 1.1em;
+            max-width: 700px;
+            margin: 0 auto;
+            opacity: 0.9;
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .feature-card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+            text-align: center;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .feature-icon {
+            font-size: 3em;
+            margin-bottom: 20px;
+            color: var(--secondary);
+        }
+
+        .feature-card h3 {
+            margin-bottom: 15px;
+            color: var(--primary);
+        }
+
+        /* قسم الأسعار */
+        .pricing {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 50px;
+            margin: 50px 0;
+        }
+
+        .pricing-plans {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+
+        .plan-card {
+            background: white;
+            border-radius: 15px;
+            padding: 40px 30px;
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .plan-card.featured {
+            transform: scale(1.05);
+            border: 2px solid var(--secondary);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+        }
+
+        .plan-card.premium {
+            background: var(--premium);
+            color: white;
+        }
+
+        .plan-card.business {
+            background: var(--business);
+            color: white;
+        }
+
+        .plan-name {
+            font-size: 1.5em;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+
+        .plan-price {
+            font-size: 2.5em;
+            margin: 20px 0;
+            font-weight: 700;
+        }
+
+        .plan-features {
+            list-style: none;
+            margin: 25px 0;
+            text-align: right;
+        }
+
+        .plan-features li {
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+        }
+
+        /* قسم الأمان */
+        .security-features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin-top: 50px;
+        }
+
+        .security-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: transform 0.3s ease;
+        }
+
+        .security-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .security-icon {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            color: var(--success);
+        }
+
+        /* قسم الشهادات */
+        .testimonials {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+
+        .testimonial-card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .testimonial-text {
+            font-style: italic;
+            margin-bottom: 20px;
+            color: #555;
+        }
+
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .author-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        .author-info h4 {
+            margin-bottom: 5px;
+            color: var(--primary);
+        }
+
+        .author-info p {
+            color: #777;
+            font-size: 0.9em;
+        }
+
+        /* قسم الأسئلة الشائعة */
+        .faq-container {
+            max-width: 800px;
+            margin: 50px auto 0;
+        }
+
+        .faq-item {
+            background: white;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+
+        .faq-question {
+            padding: 20px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .faq-answer {
+            padding: 0 20px;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease, padding 0.3s ease;
+        }
+
+        .faq-item.active .faq-answer {
+            padding: 0 20px 20px;
+            max-height: 500px;
+        }
+
+        /* قسم الاتصال */
+        .contact {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 50px;
+            margin-top: 50px;
+        }
+
+        .contact-form {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: white;
+            font-weight: 500;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 1em;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--secondary);
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .form-group textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        /* الفوتر */
+        .footer {
+            background: var(--primary);
+            color: white;
+            padding: 50px 0 20px;
+            margin-top: 80px;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-column h3 {
+            margin-bottom: 20px;
+            font-size: 1.2em;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 10px;
+        }
+
+        .footer-links a {
+            color: #ccc;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: white;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .social-links a {
+            color: white;
+            font-size: 1.2em;
+            transition: color 0.3s ease;
+        }
+
+        .social-links a:hover {
+            color: var(--secondary);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: #ccc;
+            font-size: 0.9em;
+        }
+
+        /* تصميم متجاوب */
+        @media (max-width: 768px) {
+            .nav-container {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .nav-links {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .hero h1 {
+                font-size: 2.2em;
+            }
+            
+            .hero-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .pricing-plans {
+                grid-template-columns: 1fr;
+            }
+            
+            .plan-card.featured {
+                transform: none;
+            }
+            
+            .section {
+                padding: 50px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- شريط التنقل -->
+    <nav class="navbar">
+        <div class="container nav-container">
+            <div class="logo">
+                <i class="fas fa-crown"></i>
+                <span>ميزانتي برو</span>
+            </div>
+            
+            <div class="nav-links">
+                <a href="#features">الميزات</a>
+                <a href="#pricing">الباقات</a>
+                <a href="#security">الأمان</a>
+                <a href="#testimonials">آراء العملاء</a>
+                <a href="#faq">الأسئلة الشائعة</a>
+            </div>
+            
+            <div class="nav-actions">
+                <button class="btn btn-outline" onclick="showLogin()">تسجيل الدخول</button>
+                <button class="btn btn-primary" onclick="showSubscriptionPlans()">ابدأ مجاناً</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- قسم الهيرو -->
+    <section class="hero">
+        <div class="container">
+            <h1>أدارة ميزانيتك بكل أمان وسهولة</h1>
+            <p>منصة متكاملة تجمع بين إدارة الميزانية الشخصية والمؤسسية مع نظام حماية متقدم ونسخة احتياطية تلقائية</p>
+            <div class="hero-buttons">
+                <button class="btn btn-primary btn-lg" onclick="showSubscriptionPlans()">
+                    <i class="fas fa-rocket"></i> ابدأ الآن مجاناً
+                </button>
+                <button class="btn btn-outline btn-lg" onclick="document.getElementById('features').scrollIntoView({behavior: 'smooth'})">
+                    <i class="fas fa-play-circle"></i> شاهد الفيديو التعريفي
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- قسم الميزات -->
+    <section class="section" id="features">
+        <div class="container">
+            <div class="section-title">
+                <h2>ميزات منصة ميزانتي برو</h2>
+                <p>اكتشف مجموعة الميزات المتقدمة التي تجعل إدارة ميزانيتك أسهل وأكثر أماناً</p>
+            </div>
+            
+            <div class="features">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-chart-pie"></i>
+                    </div>
+                    <h3>تقارير متقدمة</h3>
+                    <p>احصل على تقارير تفصيلية وتحليلات ذكية لإنفاقك مع رسوم بيانية تفاعلية</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3>نظام حماية متكامل</h3>
+                    <p>بياناتك مشفرة بالكامل مع نظام حماية متقدم ونسخ احتياطي تلقائي</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-mobile-alt"></i>
+                    </div>
+                    <h3>متعدد المنصات</h3>
+                    <p>استخدم المنصة على جميع أجهزتك مع مزامنة فورية للبيانات</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-bullseye"></i>
+                    </div>
+                    <h3>تتبع الأهداف</h3>
+                    <p>حدد أهدافك المالية وتتبع تقدمك مع تنبيهات وإشعارات ذكية</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-file-invoice-dollar"></i>
+                    </div>
+                    <h3>فواتير وتقارير ضريبية</h3>
+                    <p>أدر فواتيرك وأنشئ تقارير ضريبية تلقائية مع أكثر من 20 نموذج معتمد</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-headset"></i>
+                    </div>
+                    <h3>دعم فني متكامل</h3>
+                    <p>فريق دعم فني متاح على مدار الساعة لمساعدتك في جميع استفساراتك</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- قسم الباقات -->
+    <section class="section" id="pricing">
+        <div class="container">
+            <div class="section-title">
+                <h2>باقات الأسعار</h2>
+                <p>اختر الباقة المناسبة لاحتياجاتك وابدأ في تحسين إدارة ميزانيتك اليوم</p>
+            </div>
+            
+            <div class="pricing">
+                <div class="pricing-plans">
+                    <div class="plan-card">
+                        <div class="plan-name">مجاني</div>
+                        <div class="plan-price">$0 <span>/شهر</span></div>
+                        <ul class="plan-features">
+                            <li>إدارة الميزانية الأساسية</li>
+                            <li>تتبع المصروفات اليومية</li>
+                            <li>تقارير شهرية بسيطة</li>
+                            <li>تخزين محلي للبيانات</li>
+                            <li>دعم عبر البريد الإلكتروني</li>
+                        </ul>
+                        <button class="btn btn-outline" onclick="selectPlan('free')">اختيار الخطة</button>
+                    </div>
+                    
+                    <div class="plan-card featured premium">
+                        <div class="plan-name">بريميوم</div>
+                        <div class="plan-price">$29 <span>/شهر</span></div>
+                        <ul class="plan-features">
+                            <li>جميع ميزات الخطة المجانية</li>
+                            <li>تقارير متقدمة وتحليلات</li>
+                            <li>مزامنة بين الأجهزة</li>
+                            <li>نسخ احتياطي تلقائي</li>
+                            <li>دعم فني متميز</li>
+                            <li>بدون إعلانات</li>
+                            <li>تصدير بيانات متقدم</li>
+                        </ul>
+                        <button class="btn btn-success" onclick="selectPlan('premium')">الاشتراك الآن</button>
+                    </div>
+                    
+                    <div class="plan-card business">
+                        <div class="plan-name">الأعمال</div>
+                        <div class="plan-price">$99 <span>/شهر</span></div>
+                        <ul class="plan-features">
+                            <li>جميع ميزات الخطة المميزة</li>
+                            <li>إدارة فرق العمل</li>
+                            <li>تقارير مخصصة للشركات</li>
+                            <li>API للتكامل مع الأنظمة</li>
+                            <li>أولوية في الدعم الفني</li>
+                            <li>تحليلات متقدمة للأعمال</li>
+                            <li>إدارة متعددة المستخدمين</li>
+                        </ul>
+                        <button class="btn btn-success" onclick="selectPlan('business')">الاشتراك الآن</button>
+                    </div>
+                </div>
+                
+                <div style="text-align: center; margin-top: 30px; color: white;">
+                    <p><i class="fab fa-paypal" style="color: #0070ba;"></i> جميع المدفوعات تتم عبر PayPal بالدولار الأمريكي</p>
+                    <p>البريد الإلكتروني للدفع: <strong>azou8944@gmail.com</strong></p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- قسم الأمان -->
+    <section class="section" id="security">
+        <div class="container">
+            <div class="section-title">
+                <h2>نظام الحماية المتقدم</h2>
+                <p>بياناتك في أيد أمينة مع نظام الحماية الأكثر تطوراً في المنطقة</p>
+            </div>
+            
+            <div class="security-features">
+                <div class="security-card">
+                    <div class="security-icon">
+                        <i class="fas fa-lock"></i>
+                    </div>
+                    <h3>تشفير متقدم</h3>
+                    <p>جميع بياناتك مشفرة باستخدام تقنية AES-256 المتطورة</p>
+                </div>
+                
+                <div class="security-card">
+                    <div class="security-icon">
+                        <i class="fas fa-user-shield"></i>
+                    </div>
+                    <h3>المصادقة الثنائية</h3>
+                    <p>طبقة حماية إضافية لحسابك مع المصادقة الثنائية</p>
+                </div>
+                
+                <div class="security-card">
+                    <div class="security-icon">
+                        <i class="fas fa-history"></i>
+                    </div>
+                    <h3>نسخ احتياطي تلقائي</h3>
+                    <p>بياناتك محفوظة تلقائياً مع إمكانية الاستعادة في أي وقت</p>
+                </div>
+                
+                <div class="security-card">
+                    <div class="security-icon">
+                        <i class="fas fa-shield-virus"></i>
+                    </div>
+                    <h3>مراقبة مستمرة</h3>
+                    <p>نظام مراقبة مستمر لاكتشاف أي نشاط غير عادي</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- قسم آراء العملاء -->
+    <section class="section" id="testimonials">
+        <div class="container">
+            <div class="section-title">
+                <h2>آراء عملائنا</h2>
+                <p>انضم إلى آلاف المستخدمين الراضين عن خدماتنا</p>
+            </div>
+            
+            <div class="testimonials">
+                <div class="testimonial-card">
+                    <div class="testimonial-text">
+                        "ميزانتي برو غيرت طريقة إدارتي لأموري المالية تماماً. منصة شاملة وسهلة الاستخدام مع دعم فني ممتاز."
+                    </div>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">أ</div>
+                        <div class="author-info">
+                            <h4>أحمد السيد</h4>
+                            <p>مدير مالي - شركة التقنية المتطورة</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="testimonial-card">
+                    <div class="testimonial-text">
+                        "كنت أبحث很久 عن منصة تجمع بين السهولة والأمان، وميزانتي برو كانت الحل المثالي. أنصح بها بشدة."
+                    </div>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">ف</div>
+                        <div class="author-info">
+                            <h4>فاطمة العلي</h4>
+                            <p>مستشارة مالية مستقلة</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="testimonial-card">
+                    <div class="testimonial-text">
+                        "نظام الحماية المتقدم هو ما جذبني لهذه المنصة. أشعر بالطمأنينة وأنا أعلم أن بياناتي المالية في أيد أمينة."
+                    </div>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">م</div>
+                        <div class="author-info">
+                            <h4>محمد عبدالله</h4>
+                            <p>رائد أعمال - مؤسس شركة ناشئة</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- قسم الأسئلة الشائعة -->
+    <section class="section" id="faq">
+        <div class="container">
+            <div class="section-title">
+                <h2>الأسئلة الشائعة</h2>
+                <p>إجابات على أكثر الأسئلة شيوعاً حول منصة ميزانتي برو</p>
+            </div>
+            
+            <div class="faq-container">
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFAQ(this)">
+                        كيف يمكنني تجربة المنصة قبل الاشتراك؟
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>نوفر نسخة تجريبية مجانية لمدة 14 يوم مع إمكانية الوصول لجميع الميزات. يمكنك التسجيل مباشرة من خلال الضغط على زر "ابدأ مجاناً" في أعلى الصفحة.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFAQ(this)">
+                        هل بياناتي محمية وآمنة؟
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>نعم، جميع بياناتك مشفرة باستخدام تقنيات التشفير المتقدمة AES-256. كما أننا نلتزم بأعلى معايير الأمان والخصوصية، ولدينا نظام نسخ احتياطي تلقائي.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFAQ(this)">
+                        ما هي طرق الدفع المتاحة؟
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>نحن نقبل الدفع عبر PayPal وبطاقات الائتمان. جميع المعاملات تتم عبر قنوات آمنة ومشفرة.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFAQ(this)">
+                        هل يمكنني استخدام المنصة على الهاتف؟
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>نعم، منصة ميزانتي برو متجاوبة بالكامل وتعمل على جميع الأجهزة بما في ذلك الهواتف الذكية والأجهزة اللوحية.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question" onclick="toggleFAQ(this)">
+                        كيف يمكنني التواصل مع الدعم الفني؟
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>نوفر دعم فني على مدار الساعة عبر البريد الإلكتروني والدردشة الحية للمشتركين في الباقات المميزة والأعمال.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- قسم الاتصال -->
+    <section class="section">
+        <div class="container">
+            <div class="contact">
+                <div class="section-title">
+                    <h2>تواصل معنا</h2>
+                    <p>لديك استفسار أو تحتاج إلى مساعدة؟ فريق الدعم لديك جاهز لمساعدتك</p>
+                </div>
+                
+                <form class="contact-form" id="contactForm">
+                    <div class="form-group">
+                        <label for="name">الاسم الكامل</label>
+                        <input type="text" id="name" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="email">البريد الإلكتروني</label>
+                        <input type="email" id="email" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="subject">الموضوع</label>
+                        <select id="subject" required>
+                            <option value="">اختر الموضوع</option>
+                            <option value="support">دعم فني</option>
+                            <option value="sales">مبيعات</option>
+                            <option value="partnership">شراكة</option>
+                            <option value="other">أخرى</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="message">الرسالة</label>
+                        <textarea id="message" required></textarea>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary btn-lg">
+                        <i class="fas fa-paper-plane"></i> إرسال الرسالة
+                    </button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- الفوتر -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>ميزانتي برو</h3>
+                    <p>منصة متكاملة لإدارة الميزانية الشخصية والمؤسسية مع نظام حماية متقدم.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-linkedin"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>روابط سريعة</h3>
+                    <ul class="footer-links">
+                        <li><a href="#features">الميزات</a></li>
+                        <li><a href="#pricing">الباقات</a></li>
+                        <li><a href="#security">الأمان</a></li>
+                        <li><a href="#testimonials">آراء العملاء</a></li>
+                        <li><a href="#faq">الأسئلة الشائعة</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>الدعم</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">مركز المساعدة</a></li>
+                        <li><a href="#">تواصل معنا</a></li>
+                        <li><a href="#">الشروط والأحكام</a></li>
+                        <li><a href="#">سياسة الخصوصية</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>الاتصال</h3>
+                    <ul class="footer-links">
+                        <li><i class="fas fa-envelope"></i> info@mizannati-pro.com</li>
+                        <li><i class="fas fa-phone"></i> +966 123 456 789</li>
+                        <li><i class="fas fa-map-marker-alt"></i> الرياض، المملكة العربية السعودية</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>© 2024 ميزانتي برو. جميع الحقوق محفوظة.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // تفعيل الأسئلة الشائعة
+        function toggleFAQ(element) {
+            const item = element.parentElement;
+            item.classList.toggle('active');
+        }
+
+        // تفعيل نموذج الاتصال
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('شكراً لتواصلك معنا! سنرد عليك في أقرب وقت.');
+            this.reset();
+        });
+
+        // وظائف الاشتراك
+        function showLogin() {
+            alert('سيتم فتح نافذة تسجيل الدخول. في النسخة الكاملة، ستتمكن من تسجيل الدخول إلى حسابك.');
+        }
+
+        function showSubscriptionPlans() {
+            document.getElementById('pricing').scrollIntoView({behavior: 'smooth'});
+        }
+
+        function selectPlan(plan) {
+            if (plan === 'free') {
+                alert('تهانينا! يمكنك البدء باستخدام الخطة المجانية مباشرة.');
+            } else {
+                alert(`سيتم توجيهك لصفحة الدفع لخطة ${plan}. في النسخة الكاملة، ستتمكن من إتمام عملية الدفع عبر PayPal.`);
+                // في التطبيق الحقيقي، نوجه المستخدم لصفحة الدفع
+            }
+        }
+
+        // تأثير التمرير السلس للروابط
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        // تأثير الظهور التدريجي للعناصر
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = 1;
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // تطبيق تأثير الظهور على العناصر
+        document.querySelectorAll('.feature-card, .security-card, .testimonial-card').forEach(el => {
+            el.style.opacity = 0;
+            el.style.transform = 'translateY(20px)';
+            el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+            observer.observe(el);
+        });
+    </script>
+</body>
+</html>
